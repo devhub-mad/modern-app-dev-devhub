@@ -1,0 +1,129 @@
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: quarkus-template-backend
+  title: Quarkus Backend Application
+  description: creates the quarkus -workshop
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+spec:
+  owner: mad-workshop-authors
+  type: service
+  parameters:
+    - title: Provide information about the GitHub location
+      required:
+        - githubOrg
+      properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          default: devhub-mad
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for
+    - title: Provide information about the new component
+      required:
+        - cluster_id
+        - namespace
+        - owner
+      properties:
+        cluster_id:
+          title: Cluster Id
+          type: string
+          description: Id of the cluster
+          default: .apps.cluster-xxx.sandboxxx.opentlc.com
+        namespace:
+          title: Namespace
+          type: string
+          description: Namespace
+          default: devhub2
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - [User]
+    - title: Provide information about the CI method
+      required:
+        - ci
+      properties:
+        ci:
+          title: Select a CI method
+          type: string
+          description: This action will create a CI pipeline for your application based on
+            chosen method
+          default:  ../../scaffolder-skeleton/cicd/
+          enum:
+            -  ../../scaffolder-skeleton/cicd/
+          enumNames:
+            - Tekton
+      dependencies:
+        ci:
+          oneOf:
+            - properties:
+                ci:
+                  const: ../../scaffolder-skeleton/cicd/
+            - required:
+                - imageRepository
+                - imageTag
+                - namespace
+              properties:
+                ci:
+                  const:  ../../scaffolder-skeleton/cicd/
+                imageRepository:
+                  title: Select a registry
+                  type: string
+                  default: Internal OpenShift Registry
+                  enum:
+                    - quay.io
+                    - image-registry.openshift-image-registry.svc:5000
+                  enumNames:
+                    - Quay
+                    - Internal OpenShift Registry
+                  image_tag:
+                    title: Image Tag
+                    default: latest
+                    type: string
+                    description: Image tag to use for storing in the internal registry
+  steps:
+    - id: templateSource
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./source
+        values:
+          githubOrg: ${{parameters.githubOrg}}
+          repoName: modern-app-dev-devhub
+          owner: ${{parameters.owner}}
+          cluster_id: ${{parameters.cluster_id}}
+          namespace: ${{parameters.namespace}}
+          component_id: ${{parameters.namespace}}
+          image_tag: ${{parameters.image_tag}}
+    - id: publishSource
+      name: Publishing to Source Code Repository
+      action: publish:github
+      input:
+        sourcePath: ./source
+        allowedHosts:
+          - github.com
+        description: ${{parameters.description}}
+        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=modern-app-dev-devhub
+        defaultBranch: implementation
+        protectDefaultBranch: false
+        repoVisibility: public
+    - id: registerSource
+      name: Registering the Source Code Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{steps.publishSource.output.repoContentsUrl}}
+        catalogInfoPath: /catalog-info.yaml
+   
