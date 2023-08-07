@@ -140,10 +140,10 @@ spec:
         targetPath: ./pipelines
 
     - id: registerSource
-      name: Registering the Catalog Info Component
+      name: Registering the Source Code Component
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publishSource.output.repoContentsUrl }}
+        repoContentsUrl: ${{steps.publishSource.output.repoContentsUrl}}
         catalogInfoPath: /catalog-info.yaml
 
   output:
