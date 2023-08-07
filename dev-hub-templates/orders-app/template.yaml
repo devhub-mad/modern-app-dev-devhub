@@ -123,7 +123,7 @@ spec:
       name: Generating the deployment resources and artefacts
       action: fetch:template
       input:
-        url: ../../caffolder-skeleton/ci-cd/
+        url: ../scaffolder-skeleton/ci-cd/
         copyWithoutTemplating: []
         values:
           component_id: ${{parameters.namespace}}-orders-backend
