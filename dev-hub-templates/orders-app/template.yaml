@@ -120,10 +120,4 @@ spec:
         defaultBranch: implementation
         protectDefaultBranch: false
         repoVisibility: public
-    - id: registerSource
-      name: Registering the Source Code Component
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{steps.publishSource.output.repoContentsUrl}}
-        catalogInfoPath: /catalog-info.yaml
    
