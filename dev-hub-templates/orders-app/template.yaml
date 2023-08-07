@@ -139,11 +139,11 @@ spec:
           image_tag: ${{parameters.image_tag}}
         targetPath: ./pipelines
 
-    - id: register
+    - id: registerSource
       name: Registering the Catalog Info Component
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoContentsUrl: ${{ steps.publishSource.output.repoContentsUrl }}
         catalogInfoPath: /catalog-info.yaml
 
   output:
