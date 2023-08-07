@@ -107,7 +107,6 @@ spec:
           cluster_id: ${{parameters.cluster_id}}
           namespace: ${{parameters.namespace}}
           component_id: ${{parameters.namespace}}
-          image_tag: ${{parameters.image_tag}}
     - id: publishSource
       name: Publishing to Source Code Repository
       action: publish:github
@@ -120,4 +119,37 @@ spec:
         defaultBranch: implementation
         protectDefaultBranch: false
         repoVisibility: public
-   
+    - id: templatePipelines
+      name: Generating the deployment resources and artefacts
+      action: fetch:template
+      input:
+        url: ../../caffolder-skeleton/ci-cd/
+        copyWithoutTemplating: []
+        values:
+          component_id: ${{parameters.namespace}}-orders-backend
+          description: ${{parameters.description}}
+          destination: https://github.com/${{parameters.githubOrg}}/${{parameters.namespace}}-backend-gitops
+          source_repository: https://github.com/${{parameters.githubOrg}}/${{parameters.namespace}}-backend
+          repository_name: ${{parameters.namespace}}-backend
+          git_owner: ${{parameters.githubOrg}}
+          cluster: ${{parameters.cluster_id}}
+          namespace: ${{parameters.namespace}}
+          image_host: ${{parameters.image_host}}
+          image_name: ${{parameters.namespace}}/orders-backend
+          image_tag: ${{parameters.image_tag}}
+        targetPath: ./pipelines
+
+    - id: register
+      name: Registering the Catalog Info Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Open the Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open the Catalog Info Component
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
