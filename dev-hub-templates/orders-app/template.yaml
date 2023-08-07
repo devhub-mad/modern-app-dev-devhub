@@ -102,7 +102,7 @@ spec:
         targetPath: ./source
         values:
           githubOrg: ${{parameters.githubOrg}}
-          repoName: modern-app-dev-devhub
+          repoName: modern-app-dev-devhub-test
           owner: ${{parameters.owner}}
           cluster_id: ${{parameters.cluster_id}}
           namespace: ${{parameters.namespace}}
@@ -116,7 +116,7 @@ spec:
         allowedHosts:
           - github.com
         description: ${{parameters.description}}
-        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=modern-app-dev-devhub
+        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=modern-app-dev-devhub-test
         defaultBranch: implementation
         protectDefaultBranch: false
         repoVisibility: public
