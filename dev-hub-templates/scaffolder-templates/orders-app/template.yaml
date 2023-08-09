@@ -128,26 +128,6 @@ spec:
           image_tag: ${{parameters.image_tag}}
         targetPath: ./tenant-gitops
 
-    - id: catalogTemplate
-      name: Generating the Catalog Info Component
-      action: fetch:template
-      input:
-        url: ../../scaffolder-skeletons/catalog-info-skeleton/
-        values:
-          orgName: ${{ parameters.orgName }}
-          repoName: ${{ parameters.repoName }}
-          owner: ${{ parameters.owner }}
-          system: ${{ parameters.system }}
-          applicationType: service
-          description: ${{ parameters.description }}
-          namespace: ${{ parameters.namespace }}
-          imageUrl: ${{ parameters.imageUrl }}
-          imageBuilder: s2i-java
-          imageRepository: ${{ parameters.imageRepository }}
-          port: ${{ parameters.port }}
-          ci: ${{ parameters.ci }}
-          sourceControl: github.com
-
     - id: publishSource
       name: Publishing to Source Code Repository
       action: publish:github
