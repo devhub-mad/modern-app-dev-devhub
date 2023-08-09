@@ -1,38 +1,46 @@
-sapiVersion: backstage.io/v1alpha1
-{%- if values.entityKind %}
-kind: ${{ values.entityKind }}
-{%- else %}
+apiVersion: backstage.io/v1alpha1
 kind: Component
-{%- endif %}
 metadata:
-  name: ${{ values.repoName }}
+  name: ${{values.component_id}}-dev
   {%- if values.description %}
-  description: ${{ values.description }}
+  description: ${{values.description}}
   {%- endif %}
   annotations:
-    {%- if values.hostUrl %}
-    argocd/app-name: ${{ values.repoName }}
-    {%- endif %}
-    {%- if values.ci == "../../scaffolder-skeletons/tekton-skeleton/" %}
-    tektonci/build-namespace: ${{ values.namespace }}
-    {%- endif %}
-    backstage.io/kubernetes-id: ${{ values.repoName }}
+    argocd/app-name: ${{values.component_id}}-dev
+    backstage.io/kubernetes-id: ${{values.component_id}}
+    backstage.io/kubernetes-namespace: ${{values.namespace}}
     backstage.io/techdocs-ref: dir:.
-    {%- if values.sourceControl == "gitlab.com" %}
-    gitlab.com/project-slug: ${{ values.orgName }}/${{ values.repoName }}
-    {%- elif values.sourceControl == "github.com" %}
-    github.com/project-slug: ${{ values.orgName }}/${{ values.repoName }}
-    {%- endif %}
+    github.com/project-slug: ${{values.githubOrg}}/${{values.repoName}}
+    janus-idp.io/tekton-enabled: 'true'
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console${{values.cluster_id}}/dev-pipelines/ns/${{values.namespace}}/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console${{values.cluster_id}}/k8s/ns/${{values.namespace}}/deployments/${{values.component_id}}
+      title: Deployment
+      icon: web
 spec:
-  type: ${{ values.applicationType }}
-  system: ${{ values.system }}
+  type: service
   lifecycle: production
-  owner: ${{ values.owner }}
-  {%- if values.dependsOn %}
-  dependsOn:
-    - ${{ values.dependsOn }}
-  {%- endif %}
-  {%- if values.partOf %}
-  partOf:
-    - ${{ values.partOf }}
-  {%- endif %}
+  owner: ${{values.owner | dump}}
+  system: workshop-system-${{values.namespace}}
+  providesApis:
+    - backend-api-${{values.namespace}}
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-${{values.namespace}}
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+spec:
+  owner: ${{values.owner | dump}}
+---
