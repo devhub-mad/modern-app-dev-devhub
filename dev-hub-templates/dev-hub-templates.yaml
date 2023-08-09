@@ -6,5 +6,5 @@ metadata:
 spec:
   type: url
   targets:
-   - https://github.com/devhub-mad/modern-app-dev-devhub/blob/implementation/dev-hub-templates/orders-app/template.yaml
+   - https://github.com/devhub-mad/modern-app-dev-devhub/blob/implementation/dev-hub-templates/scaffolder-templates/orders-app/template.yaml
     
