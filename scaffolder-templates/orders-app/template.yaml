@@ -152,7 +152,14 @@ spec:
         defaultBranch: implementation
         protectDefaultBranch: false
         repoVisibility: public
-    
+
+    - id: registerSource
+      name: Registering the Source Code Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{steps.publishSource.output.repoContentsUrl}}
+        catalogInfoPath: /catalog-info.yaml
+
     - id: createArgoResources
       name: Create ArgoCD Resources
       action: argocd:create-resources
@@ -163,12 +170,7 @@ spec:
         repoUrl: https://github.com/${{parameters.githubOrg}}/${{parameters.namespace}}-backend-gitops.git
         path: 'argocd/'
 
-    - id: registerSource
-      name: Registering the Source Code Component
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{steps.publishSource.output.repoContentsUrl}}
-        catalogInfoPath: /catalog-info.yaml
+
 
   output:
     links:
