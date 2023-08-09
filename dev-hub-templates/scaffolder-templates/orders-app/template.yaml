@@ -112,7 +112,7 @@ spec:
       name: Generating the deployment resources and artefacts
       action: fetch:template
       input:
-        url: ../scaffolder-skeleton/ci-cd/
+        url: ./manifests
         copyWithoutTemplating: []
         values:
           component_id: ${{parameters.namespace}}-orders-backend
@@ -126,7 +126,7 @@ spec:
           image_host: ${{parameters.image_host}}
           image_name: ${{parameters.namespace}}/orders-backend
           image_tag: ${{parameters.image_tag}}
-        targetPath: ./pipelines
+        targetPath: ./tenant-gitops
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -160,6 +160,28 @@ spec:
         defaultBranch: implementation
         protectDefaultBranch: false
         repoVisibility: public
+
+    - id: publishGitops
+      name: Publishing to Deployment Resource Repository
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=${{parameters.namespace}}-backend-gitops
+        title: gitops resources for ${{parameters.namespace}}-backend
+        description: gitops resources for ${{parameters.namespace}}-backend
+        sourcePath: ./tenant-gitops
+        defaultBranch: implementation
+        protectDefaultBranch: false
+        repoVisibility: public
+    
+     - id: createArgoResources
+      name: Create ArgoCD Resources
+      action: argocd:create-resources
+      input:
+        appName: ${{parameters.namespace}}-backend-bootstrap
+        argoInstance: main
+        namespace: janus-argocd
+        repoUrl: https://github.com/${{parameters.githubOrg}}/${{parameters.namespace}}-backend-gitops.git
+        path: 'argocd/'
 
     - id: registerSource
       name: Registering the Source Code Component
