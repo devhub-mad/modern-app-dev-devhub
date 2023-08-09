@@ -1,0 +1,23 @@
+# Default values for cicd.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+app:
+  name: ${{values.component_id}}
+  namespace: ${{values.namespace}}
+  cluster: ${{values.cluster}}
+
+git:
+  branch: main
+  repo: ${{values.source_repository}}
+  org: ${{values.git_owner}}
+  name: ${{values.repository_name}}
+
+image:
+  host: ${{values.image_host}}
+  name: ${{values.image_name}}
+  tag: ${{values.image_tag}}
+
+pipelineStorage:
+  pvcSize: 2Gi
+  storageClassName: ""
