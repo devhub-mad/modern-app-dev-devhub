@@ -65,7 +65,7 @@ spec:
       required:
         - repoUrl
       properties:
-        repoUrl:
+        repoUrl: 
           title: Repository Location
           type: string
           ui:field: RepoUrlPicker
@@ -89,10 +89,9 @@ spec:
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
+          cluster: ${{ parameters.owner }}
           destination: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
-          quay_destination: ${{ parameters.image_organization }}/${{ parameters.component_id }}
-          port: 8080
+  
 
   - id: publishSource
       name: Publishing to Source Code Repository
