@@ -50,8 +50,8 @@ spec:
           description: IdP owner of the component
           ui:field: OwnerPicker
           ui:options:
-            allowedKinds:
-              - Group
+            catalogFilter:
+              kind: [User]
     - title: Provide Image Registry Information
       required:
         - image_registry
@@ -120,18 +120,18 @@ spec:
           quay_destination: ${{ parameters.image_organization }}/${{ parameters.component_id }}
           port: 8080
 
-    - id: publish
+  - id: publishSource
       name: Publishing to Source Code Repository
       action: publish:github
       input:
         sourcePath: ./source
         allowedHosts:
           - github.com
-        description: This is ${{ parameters.component_id }}
-        repoUrl: ${{ parameters.repoUrl }}
+        description: ${{parameters.description}}
+        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=${{parameters.namespace}}-backend
         defaultBranch: main
         protectDefaultBranch: false
-        repoVisibility: public
+        repoVisibility: public  
         
 
     - id: register
