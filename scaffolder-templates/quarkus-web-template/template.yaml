@@ -68,7 +68,7 @@ spec:
             - properties:
                 image_registry:
                   enum:
-                    - Openshift
+                    - OpenShift
                 image_host:
                   title: Image Host
                   type: string
@@ -124,11 +124,15 @@ spec:
       name: Publishing to Source Code Repository
       action: publish:github
       input:
+        sourcePath: ./source
+        allowedHosts:
+          - github.com
         description: This is ${{ parameters.component_id }}
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
         protectDefaultBranch: false
         repoVisibility: public
+        
 
     - id: register
       name: Registering to the Catalog
