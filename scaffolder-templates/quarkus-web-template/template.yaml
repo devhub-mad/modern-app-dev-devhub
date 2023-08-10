@@ -93,18 +93,18 @@ spec:
           destination: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
   
 
-  - id: publishSource
-      name: Publishing to Source Code Repository
-      action: publish:github
-      input:
-        sourcePath: ./source
-        allowedHosts:
-          - github.com
-        description: ${{parameters.description}}
-        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=${{parameters.namespace}}-backend
-        defaultBranch: main
-        protectDefaultBranch: false
-        repoVisibility: public  
+    - id: publishSource
+        name: Publishing to Source Code Repository
+        action: publish:github
+        input:
+          sourcePath: ./source
+          allowedHosts:
+            - github.com
+          description: ${{parameters.description}}
+          repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=${{parameters.namespace}}-backend
+          defaultBranch: main
+          protectDefaultBranch: false
+          repoVisibility: public  
         
 
     - id: register
