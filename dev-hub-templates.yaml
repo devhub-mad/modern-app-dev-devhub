@@ -7,4 +7,5 @@ spec:
   type: url
   targets:
    - https://github.com/devhub-mad/modern-app-dev-devhub/blob/implementation/scaffolder-templates/orders-app/template.yaml
-    
+   - https://github.com/devhub-mad/modern-app-dev-devhub/blob/implementation/scaffolder-templates/quarkus-backend-template/template.yaml
+   - https://github.com/devhub-mad/modern-app-dev-devhub/blob/implementation/scaffolder-templates/quarkus-web-template/template.yaml
