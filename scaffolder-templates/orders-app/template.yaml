@@ -145,10 +145,9 @@ spec:
       name: Publishing to Deployment Resource Repository
       action: publish:github
       input:
-        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=${{parameters.namespace}}-backend-gitops
+        repoUrl: github.com?owner=${{parameters.githubOrg}}&repo=${{parameters.namespace}}-gitops
         title: gitops resources for ${{parameters.namespace}}-backend
         description: gitops resources for ${{parameters.namespace}}-backend
-        sourcePath: ./tenant-gitops
         defaultBranch: implementation
         protectDefaultBranch: false
         repoVisibility: public
@@ -164,13 +163,12 @@ spec:
       name: Create ArgoCD Resources
       action: argocd:create-resources
       input:
-        appName: ${{parameters.namespace}}-backend-bootstrap
-        argoInstance: main
-        namespace: janus-argocd
-        repoUrl: https://github.com/${{parameters.githubOrg}}/${{parameters.namespace}}-backend-gitops.git
+        appName: ${{parameters.repoName}}
+        argoInstance: argocd.operate-first.cloud
+        namespace: ${{ parameters.namespace }}
+        repoUrl: ${{ steps.publish.output.remoteUrl }}
+        labelValue: ${{ parameters.repoName }}
         path: 'argocd/'
-
-
 
   output:
     links:
